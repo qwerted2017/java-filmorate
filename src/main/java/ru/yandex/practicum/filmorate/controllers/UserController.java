@@ -1,22 +1,25 @@
 package ru.yandex.practicum.filmorate.controllers;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.models.User;
 
-import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-@AllArgsConstructor
 @Slf4j
 public class UserController {
     private final List<User> users;
     private static int userCounter = 0;
+
+    public UserController() {
+        this.users = new ArrayList<>();
+    }
 
     private int countUserId() {
         return ++userCounter;
@@ -28,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody @Valid User user) {
+    public User createUser(@RequestBody @Validated User user) {
 
         if (users.stream().noneMatch(user1 -> user1.getId() == user.getId())) {
             user.setId(countUserId());
