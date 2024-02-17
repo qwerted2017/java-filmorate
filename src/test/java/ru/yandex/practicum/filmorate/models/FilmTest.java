@@ -14,6 +14,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FilmTest {
+
     private final Film film = Film.builder()
             .name("Джентельмены удачи")
             .description("Длинный путь к рыбалке на максималках")

@@ -19,6 +19,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Film {
+
     private int id;
     @NotBlank
     @EqualsAndHashCode.Exclude

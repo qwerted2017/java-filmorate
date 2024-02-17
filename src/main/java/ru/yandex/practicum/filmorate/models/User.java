@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class User {
+
     private int id;
 
     @NotBlank
