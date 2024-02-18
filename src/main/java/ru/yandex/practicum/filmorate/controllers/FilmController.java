@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.models.Film;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 public class FilmController {
-    private final List<Film> films;
+    private final List<Film> films = new ArrayList<>();
     private static int filmCounter = 0;
 
     private int countFilmId() {

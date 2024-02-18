@@ -11,9 +11,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
-/**
- * Film.
- */
 @Data
 @EqualsAndHashCode
 @AllArgsConstructor
