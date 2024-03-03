@@ -47,10 +47,10 @@ public class FilmService {
                 .limit(count)
                 .collect(Collectors.toList());
     }
-}
 
-class FilmComparator implements Comparator<Film> {
-    public int compare(Film a, Film b) {
-        return Integer.compare(a.listLikes().size(), b.listLikes().size());
+    static class FilmComparator implements Comparator<Film> {
+        public int compare(Film a, Film b) {
+            return Integer.compare(a.listLikes().size(), b.listLikes().size());
+        }
     }
 }
