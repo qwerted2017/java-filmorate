@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Service
 public class FilmService {
     @Autowired
-    FilmStorage filmStorage;
+    private FilmStorage filmStorage;
 
     public Film createFilm(Film film) {
         return filmStorage.addFilm(film);

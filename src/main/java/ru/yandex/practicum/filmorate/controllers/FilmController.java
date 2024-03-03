@@ -1,26 +1,19 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.models.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
 @RequestMapping("/films")
 @AllArgsConstructor
-@Slf4j
 public class FilmController {
-
 
     @Autowired
     private FilmService filmService;
@@ -51,24 +44,12 @@ public class FilmController {
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void deleteLike(@PathVariable int id, @PathVariable int userId){
+    public void deleteLike(@PathVariable int id, @PathVariable int userId) {
         filmService.deleteLike(userId, id);
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopsFilms(@RequestParam(defaultValue = "10") int count){
+    public List<Film> getPopsFilms(@RequestParam(defaultValue = "10") int count) {
         return filmService.listTopTenFilms(count);
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleNotFoundUser(final NotFoundException e) {
-        return Map.of("error", e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleNotValidRequest(final ValidationException e) {
-        return Map.of("error", e.getMessage());
     }
 }
