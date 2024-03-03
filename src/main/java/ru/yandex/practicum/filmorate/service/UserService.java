@@ -53,7 +53,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public List<User> listCommonFriends(int userId, int friendId){
+    public List<User> listCommonFriends(int userId, int friendId) {
         List<User> userFriends = listFriends(userId);
         List<User> friendFriends = listFriends(friendId);
 
