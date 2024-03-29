@@ -7,7 +7,9 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.models.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -15,6 +17,8 @@ public class InMemoryUserStorage implements UserStorage {
 
     private final List<User> users = new ArrayList<>();
     private static int userCounter = 0;
+
+    private final Map<List<Integer>, Boolean> friendships = new HashMap<>();
 
     private int countUserId() {
         return ++userCounter;
@@ -65,5 +69,38 @@ public class InMemoryUserStorage implements UserStorage {
             log.error(e);
             throw new NotFoundException(e);
         }
+    }
+
+    @Override
+    public void addFriend(User user, User friend) {
+        if (!friendships.containsKey(List.of(user.getId(), friend.getId()))) {
+            friendships.put(List.of(user.getId(), friend.getId()), false);
+        }
+        if (friendships.containsKey(List.of(friend.getId(), user.getId()))) {
+            friendships.put(List.of(user.getId(), friend.getId()), true);
+            friendships.put(List.of(friend.getId(), user.getId()), true);
+        }
+    }
+
+    @Override
+    public void removeFriend(User user, User friend) {
+        if (friendships.containsKey(List.of(friend.getId(), user.getId()))) {
+            friendships.put(List.of(friend.getId(), user.getId()), true);
+        }
+        friendships.remove(List.of(user.getId(), friend.getId()));
+    }
+
+    @Override
+    public List<User> getFriends(User user) {
+        List<User> friends = new ArrayList<>();
+
+        for (List<Integer> couple : friendships.keySet()) {
+            if (couple.get(0) == user.getId()) {
+                int friendId = couple.get(1);
+                User friend = getUserById(friendId);
+                friends.add(friend);
+            }
+        }
+        return friends;
     }
 }

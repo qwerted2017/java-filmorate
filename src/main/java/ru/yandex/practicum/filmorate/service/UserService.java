@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.models.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -10,9 +11,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserStorage userStorage;
 
+    private final UserStorage userStorage;
+    @Autowired
+    public UserService(@Qualifier("Repository") UserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
     public List<User> getUsers() {
         return userStorage.getUsers();
     }
@@ -29,28 +33,27 @@ public class UserService {
         return userStorage.updateUser(user);
     }
 
-    public void addFriend(int userId, int friendId) {
+    public User addFriend(int userId, int friendId) {
         User user = userStorage.getUserById(userId);
         User friend = userStorage.getUserById(friendId);
 
-        user.addFriend(friend.getId());
-        friend.addFriend(user.getId());
+        userStorage.addFriend(user, friend);
+
+        return userStorage.getUserById(user.getId());
     }
 
     public void removeFriend(int userId, int badFriendId) {
         User user = userStorage.getUserById(userId);
         User badFriend = userStorage.getUserById(badFriendId);
 
-        user.deleteFriend(badFriend.getId());
-        badFriend.deleteFriend(user.getId());
+        userStorage.removeFriend(user, badFriend);
     }
 
     public List<User> listFriends(int userId) {
 
         User user = userStorage.getUserById(userId);
-        return user.listFriends().stream()
-                .map(id -> userStorage.getUserById(id))
-                .collect(Collectors.toList());
+
+        return userStorage.getFriends(user);
     }
 
     public List<User> listCommonFriends(int userId, int friendId) {

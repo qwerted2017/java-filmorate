@@ -7,12 +7,17 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.models.Film;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
     private final List<Film> films = new ArrayList<>();
+    private final Map<Integer, Integer> likesFilms = new HashMap<>();
+    private final Map<List<Integer>, Integer> likesUsers = new HashMap<>();
     private static int filmCounter = 0;
 
     private int countFilmId() {
@@ -64,5 +69,34 @@ public class InMemoryFilmStorage implements FilmStorage {
             log.error(e);
             throw new NotFoundException(e);
         }
+    }
+
+    @Override
+    public void addLike(Integer filmId, Integer userId) {
+        likesUsers.put(List.of(userId, filmId), 1);
+        likesFilms.put(filmId, likesFilms.getOrDefault(filmId, 0) + 1);
+    }
+
+    @Override
+    public void removeLike(Integer filmId, Integer userId) {
+        likesUsers.remove(List.of(userId, filmId));
+
+        // если у фильма уже есть лайки , убираем 1
+        if (likesFilms.containsKey(filmId)) {
+            int likeCount = likesFilms.get(filmId);
+            if (likeCount > 1) {
+                likesFilms.put(filmId, likeCount - 1);
+            }
+        }
+    }
+
+    @Override
+    public List<Film> getNFilms(Integer count) {
+        return likesFilms.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Integer, Integer>comparingByValue().reversed())
+                .limit(count)
+                .map(e -> getFilmById(e.getKey()))
+                .collect(Collectors.toList());
     }
 }

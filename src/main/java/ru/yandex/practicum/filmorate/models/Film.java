@@ -43,6 +43,8 @@ public class Film {
     @EqualsAndHashCode.Exclude
     private int duration;
 
+    private MpaRating mpaRating;
+
     public void addLike(int userId) {
         likes.add(userId);
     }

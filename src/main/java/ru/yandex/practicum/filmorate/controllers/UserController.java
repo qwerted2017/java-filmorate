@@ -31,12 +31,14 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@RequestBody User user) {
-        return userService.updateUser(user);
+        User user1 = userService.updateUser(user);
+        return user1;
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable(name = "id") int userId, @PathVariable int friendId) {
-        userService.addFriend(userId, friendId);
+    public User addFriend(@PathVariable(name = "id") int userId, @PathVariable int friendId) {
+        User user = userService.addFriend(userId, friendId);
+        return user;
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
@@ -46,7 +48,8 @@ public class UserController {
 
     @GetMapping("/{id}/friends")
     public List<User> getFriends(@PathVariable(name = "id") int userId) {
-        return userService.listFriends(userId);
+        List<User> friends = userService.listFriends(userId);
+        return friends;
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
