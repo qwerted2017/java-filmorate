@@ -13,10 +13,12 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserStorage userStorage;
+
     @Autowired
     public UserService(@Qualifier("Repository") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
+
     public List<User> getUsers() {
         return userStorage.getUsers();
     }
