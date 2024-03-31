@@ -29,8 +29,9 @@ CREATE TABLE if not exists genre
 
 CREATE TABLE if not exists film_genre
 (
-    "film_id"  integer PRIMARY KEY,
-    "genre_id" integer
+    "film_id"  integer,
+    "genre_id" integer,
+    PRIMARY KEY ("genre_id", "film_id")
 );
 
 CREATE TABLE if not exists users
