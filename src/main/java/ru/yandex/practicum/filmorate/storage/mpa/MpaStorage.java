@@ -13,7 +13,9 @@ public class MpaStorage {
     private final JdbcTemplate jdbcTemplate;
 
 
-    public MpaStorage(JdbcTemplate jdbcTemplate) {this.jdbcTemplate = jdbcTemplate;}
+    public MpaStorage(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<MpaRating> getRatings() {
         String sql = "select * from Mpa_Rating";
