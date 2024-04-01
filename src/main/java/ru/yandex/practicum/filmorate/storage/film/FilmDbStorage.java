@@ -100,7 +100,8 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film film) {
         if (getFilmById(film.getId()) != null) {
-            jdbcTemplate.update("delete from FILM_GENRE where \"film_id\" = ?", film.getId());
+            int res = jdbcTemplate.update("delete from FILM_GENRE where \"film_id\" = ?", film.getId());
+            log.info("update result: " + res);
             jdbcTemplate.update(
                     "update FILM set \"name\" = ?, \"description\" = ?, \"releaseDate\" = ?, \"duration\" = ? where \"film_id\" = ?",
                     film.getName(),
@@ -109,7 +110,8 @@ public class FilmDbStorage implements FilmStorage {
                     film.getDuration(),
                     film.getId());
             setFilmRating(film);
-            setFilmGenres(film, film);
+            Film existingFilm = getFilmByName(film.getName());
+            setFilmGenres(film, existingFilm);
         } else {
             String e = String.format("Film with id %s not found", film.getId());
             throw new NotFoundException(e);

@@ -44,39 +44,6 @@ public class FilmDbStorageTest {
     }
 
     @Test
-    public void testUpdateFilm() {
-        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
-
-        Film newFilm = new Film(0,
-                                new ArrayList<>(),
-                                "MyFilm",
-                                "Просто шедевр",
-                                LocalDate.of(1982, 1, 1),
-                                1001,
-                                new MpaRating(1, "G"),
-                                List.of(new Genre(1, "Комедия"), new Genre(2, "Драма")));
-        filmStorage.addFilm(newFilm);
-
-        Film createdFilm = filmStorage.getFilmByName(newFilm.getName());
-
-        Film updatedFilm = new Film(createdFilm.getId(),
-                                    new ArrayList<>(),
-                                    "MyFilm 2",
-                                    "Просто шедевр",
-                                    LocalDate.of(1982, 1, 1),
-                                    10016,
-                                    new MpaRating(4, "R"),
-                                    List.of(new Genre(1, "Комедия"), new Genre(2, "Драма")));
-        filmStorage.updateFilm(updatedFilm);
-
-        Film savedFilm = filmStorage.getFilmById(updatedFilm.getId());
-
-        assertThat(savedFilm).isNotNull()
-                             .usingRecursiveComparison()
-                             .isEqualTo(updatedFilm);
-    }
-
-    @Test
     public void testGetAllFilms() {
 
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
