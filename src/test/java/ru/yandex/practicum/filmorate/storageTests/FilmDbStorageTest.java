@@ -8,9 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.models.Film;
 import ru.yandex.practicum.filmorate.models.Genre;
 import ru.yandex.practicum.filmorate.models.MpaRating;
-import ru.yandex.practicum.filmorate.models.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,14 +16,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@JdbcTest // указываем, о необходимости подготовить бины для работы с БД
+@JdbcTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmDbStorageTest {
     private final JdbcTemplate jdbcTemplate;
 
     @Test
     public void testFindFilmById() {
-        // Подготавливаем данные для теста
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
 
         Film newFilm = new Film(1,
@@ -38,18 +35,15 @@ public class FilmDbStorageTest {
                                 List.of(new Genre(1, "Комедия"), new Genre(2, "Драма")));
         filmStorage.addFilm(newFilm);
 
-        // вызываем тестируемый метод
         Film savedFilm = filmStorage.getFilmByName(newFilm.getName());
 
-        // проверяем утверждения
-        assertThat(savedFilm).isNotNull() // проверяем, что объект не равен null
-                             .usingRecursiveComparison() // проверяем, что значения полей нового
-                             .isEqualTo(newFilm);        // и сохраненного пользователя - совпадают
+        assertThat(savedFilm).isNotNull()
+                             .usingRecursiveComparison()
+                             .isEqualTo(newFilm);
     }
 
     @Test
     public void testUpdateFilm() {
-        // Подготавливаем данные для теста
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
 
         Film newFilm = new Film(0,
@@ -74,18 +68,16 @@ public class FilmDbStorageTest {
                                     List.of(new Genre(1, "Комедия"), new Genre(2, "Драма")));
         filmStorage.updateFilm(updatedFilm);
 
-        // вызываем тестируемый метод
         Film savedFilm = filmStorage.getFilmById(updatedFilm.getId());
 
-        // проверяем утверждения
-        assertThat(savedFilm).isNotNull() // проверяем, что объект не равен null
-                             .usingRecursiveComparison() // проверяем, что значения полей нового
-                             .isEqualTo(updatedFilm);        // и сохраненного пользователя - совпадают
+        assertThat(savedFilm).isNotNull()
+                             .usingRecursiveComparison()
+                             .isEqualTo(updatedFilm);
     }
 
     @Test
     public void testGetAllFilms() {
-        // Подготавливаем данные для теста
+
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
 
         Film newFilm1 = new Film(1,
@@ -108,13 +100,10 @@ public class FilmDbStorageTest {
                                  List.of(new Genre(1, "Комедия"), new Genre(2, "Драма")));
         filmStorage.addFilm(newFilm2);
 
-        // вызываем тестируемый метод
         List<Film> savedFilms = filmStorage.getFilms();
 
-        // проверяем утверждения
-        assertThat(savedFilms).isNotNull() // проверяем, что объект не равен null
-                              .usingRecursiveComparison() // проверяем, что значения полей нового
-                              .isEqualTo(List.of(newFilm1, newFilm2));        // и сохраненного пользователя - совпадают
+        assertThat(savedFilms).isNotNull()
+                              .usingRecursiveComparison()
+                              .isEqualTo(List.of(newFilm1, newFilm2));
     }
-
 }
