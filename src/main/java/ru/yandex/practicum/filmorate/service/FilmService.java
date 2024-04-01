@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.models.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -11,8 +12,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
+    private final FilmStorage filmStorage;
+
     @Autowired
-    private FilmStorage filmStorage;
+    public FilmService(@Qualifier("Repository") FilmStorage filmStorage) {
+        this.filmStorage = filmStorage;
+    }
 
     public Film createFilm(Film film) {
         return filmStorage.addFilm(film);
@@ -30,27 +35,31 @@ public class FilmService {
         return filmStorage.updateFilm(film);
     }
 
-    public void addLike(int userId, int filmId) {
-        Film film = filmStorage.getFilmById(filmId);
-        film.addLike(userId);
-    }
-
-    public void deleteLike(int userId, int filmId) {
-        Film film = filmStorage.getFilmById(filmId);
-        film.deleteLike(userId);
-    }
-
     public List<Film> listTopTenFilms(int count) {
-        return filmStorage.getFilms()
-                .stream()
-                .sorted(new FilmComparator().reversed())
-                .limit(count)
-                .collect(Collectors.toList());
+        return filmStorage.getNFilms(count)
+                          .stream()
+                          .sorted(new FilmComparator().reversed())
+                          .limit(count)
+                          .collect(Collectors.toList());
     }
 
     static class FilmComparator implements Comparator<Film> {
         public int compare(Film a, Film b) {
-            return Integer.compare(a.listLikes().size(), b.listLikes().size());
+            return Integer.compare(a.getLikes().size(), b.getLikes().size());
+        }
+    }
+
+    public void addLike(Integer filmId, Integer userId) {
+        Film film = filmStorage.getFilmById(filmId);
+        if (film != null) {
+            filmStorage.addLike(filmId, userId);
+        }
+    }
+
+    public void deleteLike(Integer filmId, Integer userId) {
+        Film film = filmStorage.getFilmById(filmId);
+        if (film != null) {
+            filmStorage.removeLike(filmId, userId);
         }
     }
 }
