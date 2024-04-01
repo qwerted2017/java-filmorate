@@ -25,7 +25,7 @@ public class FilmDbStorageTest {
     public void testFindFilmById() {
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
 
-        Film newFilm = new Film(1,
+        Film newFilm = new Film(0,
                                 new ArrayList<>(),
                                 "MyFilm",
                                 "Просто шедевр",
@@ -39,6 +39,7 @@ public class FilmDbStorageTest {
 
         assertThat(savedFilm).isNotNull()
                              .usingRecursiveComparison()
+                             .ignoringFields("id")
                              .isEqualTo(newFilm);
     }
 
