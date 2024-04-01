@@ -70,52 +70,53 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public Film addFilm(Film film) {
+    public Film addFilm(Film rawfilm) {
 
-        validateRatingFilm(film);
+        validateRatingFilm(rawfilm);
 
         Film existingFilm = null;
         try {
-            existingFilm = getFilmByName(film.getName());
+            existingFilm = getFilmByName(rawfilm.getName());
         } catch (NotFoundException e) {
-            log.warn("Film with name {} not found", film.getName());
+            log.warn("Film with name {} not found", rawfilm.getName());
         }
 
         if (existingFilm == null) {
             jdbcTemplate.update(
                     "insert into FILM (\"name\", \"description\", \"releaseDate\", \"duration\") values (?, ?, ?, ?)",
-                    film.getName(),
-                    film.getDescription(),
-                    film.getReleaseDate(),
-                    film.getDuration());
+                    rawfilm.getName(),
+                    rawfilm.getDescription(),
+                    rawfilm.getReleaseDate(),
+                    rawfilm.getDuration());
         } else {
-            updateFilm(existingFilm);
+            rawfilm.setId(existingFilm.getId());
+            updateFilm(rawfilm);
         }
-        setFilmRating(film);
-        existingFilm = getFilmByName(film.getName());
-        setFilmGenres(existingFilm, film);
+        setFilmRating(rawfilm);
+        existingFilm = getFilmByName(rawfilm.getName());
+        setFilmGenres(existingFilm, rawfilm);
         return getFilmById(existingFilm.getId());
     }
 
     @Override
-    public Film updateFilm(Film film) {
-        if (getFilmById(film.getId()) != null) {
-            jdbcTemplate.update("delete from FILM_GENRE where \"film_id\" = ?", film.getId());
+    public Film updateFilm(Film existingFilm) {
+        if (getFilmById(existingFilm.getId()) != null) {
+            jdbcTemplate.update("delete from FILM_GENRE where \"film_id\" = ?", existingFilm.getId());
             jdbcTemplate.update(
                     "update FILM set \"name\" = ?, \"description\" = ?, \"releaseDate\" = ?, \"duration\" = ? where \"film_id\" = ?",
-                    film.getName(),
-                    film.getDescription(),
-                    film.getReleaseDate(),
-                    film.getDuration(),
-                    film.getId());
-            setFilmRating(film);
-            Film existingFilm = getFilmByName(film.getName());
-            setFilmGenres(film, existingFilm);
+                    existingFilm.getName(),
+                    existingFilm.getDescription(),
+                    existingFilm.getReleaseDate(),
+                    existingFilm.getDuration(),
+                    existingFilm.getId());
+            setFilmRating(existingFilm);
+            Film savedFilm = getFilmByName(existingFilm.getName());
+            setFilmGenres(savedFilm, existingFilm);
         } else {
-            String e = String.format("Film with id %s not found", film.getId());
+            String e = String.format("Film with id %s not found", existingFilm.getId());
             throw new NotFoundException(e);
         }
-        return getFilmById(film.getId());
+        return getFilmById(existingFilm.getId());
     }
 
     @Override
