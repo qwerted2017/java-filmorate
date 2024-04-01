@@ -12,18 +12,17 @@ import java.util.List;
 @Component
 public class GenreDbStorage {
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     public List<Genre> getGenres() {
-        String sql = "select * from genre";
+        String sql = "select * from GENRE";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Genre(rs.getInt("genre_id"), rs.getString("name")));
     }
 
     public Genre getGenreById(int genreId) {
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet("select * from GENRE where \"genre_id\"=?", genreId);
         if (rowSet.next()) {
-            Genre genre = new Genre(rowSet.getInt("genre_id"), rowSet.getString("name"));
-            return genre;
+            return new Genre(rowSet.getInt("genre_id"), rowSet.getString("name"));
         } else {
             String e = String.format("Genre with id %s not found", genreId);
             throw new NotFoundException(e);

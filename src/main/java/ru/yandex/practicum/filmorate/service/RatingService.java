@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class RatingService {
     @Autowired
-    MpaStorage mpaStorage;
+    private MpaStorage mpaStorage;
 
     public List<MpaRating> getRatings() {
         return mpaStorage.getRatings();
