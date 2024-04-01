@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class FilmDbStorageTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private final FilmDbStorage filmStorage;
     private final UserDbStorage userDbStorage;
 
