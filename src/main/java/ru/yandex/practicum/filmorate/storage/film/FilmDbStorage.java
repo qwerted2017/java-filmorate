@@ -108,6 +108,8 @@ public class FilmDbStorage implements FilmStorage {
                     film.getReleaseDate(),
                     film.getDuration(),
                     film.getId());
+            setFilmRating(film);
+            setFilmGenres(film, film);
         } else {
             String e = String.format("Film with id %s not found", film.getId());
             throw new NotFoundException(e);
