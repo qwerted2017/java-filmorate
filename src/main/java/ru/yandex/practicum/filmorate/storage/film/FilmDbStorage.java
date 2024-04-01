@@ -100,8 +100,7 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film film) {
         if (getFilmById(film.getId()) != null) {
-            int res = jdbcTemplate.update("delete from FILM_GENRE where \"film_id\" = ?", film.getId());
-            log.info("update result: " + res);
+            jdbcTemplate.update("delete from FILM_GENRE where \"film_id\" = ?", film.getId());
             jdbcTemplate.update(
                     "update FILM set \"name\" = ?, \"description\" = ?, \"releaseDate\" = ?, \"duration\" = ? where \"film_id\" = ?",
                     film.getName(),
